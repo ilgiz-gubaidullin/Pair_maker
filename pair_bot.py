@@ -3,7 +3,7 @@ from random import randint
 '''Если захочется добавить стикеры'''
 from telebot import types
 
-bot = telebot.TeleBot('1682187129:AAF7sN4HXtrOwz1oKSiuXQjv2hwNtksxD80')
+bot = telebot.TeleBot('')
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
