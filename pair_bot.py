@@ -1,34 +1,37 @@
 import telebot
-from random import randint
-'''Если захочется добавить стикеры'''
-from telebot import types
+import random
 
 bot = telebot.TeleBot('1682187129:AAF7sN4HXtrOwz1oKSiuXQjv2hwNtksxD80')
 
+players_list = []
+stickers_list =[]
+
+
+@bot.message_handler(content_types=['sticker'])
+def sticker_id(message):
+    if message.sticker.file_unique_id == 'AgADMgADN8pHFg':
+        players_list.append(message.from_user.first_name)
+        stickers_list.append(message.sticker.file_unique_id)
+        if len(stickers_list) > 1:
+            players_list.clear()
+            players_list.append(message.from_user.first_name)
+            stickers_list.clear()
+            stickers_list.append(message.sticker.file_unique_id)
+
+
 @bot.message_handler(content_types=['text'])
-def get_text_messages(message):
-    msg = ''
-    if message.text.lower() == "подели":
-        # Просим 4 имени
-        msg = bot.reply_to(message, "напиши 4 имени через пробелы")
-        bot.register_next_step_handler(msg, pair_making)
+def user_adding(message):
+    l2 = message.text.split()
+    if ('+' in l2) and (message.from_user.first_name not in players_list):
+        players_list.append(message.from_user.first_name)
+    elif len(l2) == 2:
+        players_list.append(l2[1])
 
-def pair_making(message):
-    l1 = message.text.split()
-    n = len(l1)
-    if n == 4:
-        p1 = randint(0, 3)
-        p2 = randint(0, 3)
-        while p2 == p1:
-            p2 = randint(0, 3)
-        p3 = randint(0, 3)
-        while p3 == p1 or p3 == p2:
-            p3 = randint(0, 3)
-        p4 = randint(0, 3)
-        while p4 == p3 or p4 == p2 or p4 == p1:
-            p4 = randint(0, 3)
-        bot.send_message(message.chat.id, 'Первая пара игроков: {} и {}'.format(l1[p1], l1[p2]))
-        bot.send_message(message.chat.id, 'Вторая пара игроков: {} и {}'.format(l1[p3], l1[p4]))
+    if len(players_list) == 4:
+        random.shuffle(players_list)
+        bot.send_message(message.chat.id, 'Первая пара игроков: {} и {}'.format(players_list[0], players_list[1]))
+        bot.send_message(message.chat.id, 'Вторая пара игроков: {} и {}'.format(players_list[2], players_list[3]))
+        players_list.clear()
 
 
-bot.polling(none_stop=True, interval=0)
+bot.polling()
