@@ -1,7 +1,7 @@
 import telebot
 import random
 
-bot = telebot.TeleBot('1682187129:AAF7sN4HXtrOwz1oKSiuXQjv2hwNtksxD80')
+bot = telebot.TeleBot('')
 
 players_list = []
 stickers_list =[]
