@@ -1,7 +1,6 @@
 import telebot
 import random
 
-#@kyten_kata
 bot = telebot.TeleBot('')
 
 players_list = []
