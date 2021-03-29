@@ -1,6 +1,7 @@
 import telebot
 import random
 
+#@kyten_kata
 bot = telebot.TeleBot('')
 
 players_list = []
@@ -17,15 +18,17 @@ def sticker_id(message):
             players_list.append(message.from_user.first_name)
             stickers_list.clear()
             stickers_list.append(message.sticker.file_unique_id)
+    print(players_list)
 
 
 @bot.message_handler(content_types=['text'])
 def user_adding(message):
-    l2 = message.text.split()
-    if ('+' in l2) and (message.from_user.first_name not in players_list):
-        players_list.append(message.from_user.first_name)
-    elif len(l2) == 2:
-        players_list.append(l2[1])
+    addition_list = message.text.split()
+    if '+' == addition_list[0]:
+        if message.from_user.first_name not in players_list:
+            players_list.append(message.from_user.first_name)
+        else:
+            players_list.append(addition_list[1])
 
     if len(players_list) == 4:
         random.shuffle(players_list)
